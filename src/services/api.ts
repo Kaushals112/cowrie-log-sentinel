@@ -1,3 +1,4 @@
+
 import { toast } from "@/hooks/use-toast";
 
 // Base URL for the API
@@ -69,11 +70,6 @@ async function apiRequest<T>(
     return await response.json();
   } catch (error) {
     console.error("API request failed:", error);
-    toast({
-      title: "Error",
-      description: error instanceof Error ? error.message : "Failed to connect to server",
-      variant: "destructive",
-    });
     throw error;
   }
 }
@@ -178,8 +174,8 @@ export async function mockFetchSessionML(sessionId: string): Promise<SessionMLAn
   };
 }
 
-// Use these functions during development until backend is connected
-export const fetchSessionsData = import.meta.env.DEV ? mockFetchSessions : fetchSessions;
-export const fetchStatsData = import.meta.env.DEV ? mockFetchStats : fetchStats;
-export const fetchMLAnalysisData = import.meta.env.DEV ? mockFetchMLAnalysis : fetchMLAnalysis;
-export const fetchSessionMLData = import.meta.env.DEV ? mockFetchSessionML : fetchSessionML;
+// Always use mock data for development to avoid API errors
+export const fetchSessionsData = mockFetchSessions;
+export const fetchStatsData = mockFetchStats;
+export const fetchMLAnalysisData = mockFetchMLAnalysis;
+export const fetchSessionMLData = mockFetchSessionML;

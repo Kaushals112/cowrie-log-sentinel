@@ -217,9 +217,6 @@ function SessionItem({ session }: SessionItemProps) {
     return date.toLocaleString();
   };
   
-  // Get the latest ML output if available
-  const latestMLOutput = session.events.find(e => e.ml_output)?.ml_output;
-  
   return (
     <div className="border rounded-lg p-3 hover:bg-muted/30 transition-colors">
       <div className="flex justify-between items-start">
@@ -239,11 +236,6 @@ function SessionItem({ session }: SessionItemProps) {
               <Clock className="h-3 w-3 mr-1" />
               {session.duration}
             </div>
-          )}
-          {latestMLOutput && (
-            <Badge variant="outline" className="mt-1">
-              {latestMLOutput}
-            </Badge>
           )}
         </div>
       </div>
