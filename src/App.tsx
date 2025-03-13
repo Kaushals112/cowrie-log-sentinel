@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import MLDashboard from "./pages/MLDashboard";
 import CommandsPage from "./pages/CommandsPage";
+import SessionsPage from "./pages/SessionsPage";
+import SessionPage from "./pages/SessionPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,10 +27,13 @@ const App = () => (
           {/* Main routes wrapped in layout */}
           <Route path="/sessions" element={
             <Layout>
-              <div className="p-6">
-                <h1 className="text-2xl font-medium mb-4">Sessions</h1>
-                <p>Sessions page content will appear here.</p>
-              </div>
+              <SessionsPage />
+            </Layout>
+          } />
+          
+          <Route path="/sessions/:sessionId" element={
+            <Layout>
+              <SessionPage />
             </Layout>
           } />
           

